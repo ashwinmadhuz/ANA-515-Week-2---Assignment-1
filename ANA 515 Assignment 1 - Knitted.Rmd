@@ -1,0 +1,44 @@
+---
+title: "ANA 515 Assignment 1"
+author: "Ashwin Madhusudan"
+date: "6/5/2022"
+output:
+  html_document: 
+  theme: cerulean
+---
+
+```{r setup, include = FALSE}
+install.packages("dplyr", repos = "http://cran.us.r-project.org")
+install.packages("kntir", repos = "http://cran.us.r-project.org")
+install.packages("bslib", repos = "http://cran.us.r-project.org")
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+
+library(dplyr)
+library(knitr)
+library(bslib)
+library(tidyverse)
+
+url <- "https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv"
+gun_deaths <- read.csv(url)
+
+youth <- gun_deaths %>% 
+filter(age <= 65)
+summary(youth)
+```
+
+We have data about `r nrow(gun_deaths)` individuals killed by guns. Only `r nrow(gun_deaths)-nrow(youth)` are older than 65. The distribution of the remainder is shown below:
+
+# Distribution by age
+```{r youth-dist, echo = FALSE} 
+youth %>% 
+ggplot(aes(age)) + 
+geom_freqpoly(binwidth = 1)
+```
+
+# Distribution by race
+```{r race-dist, echo = FALSE} 
+youth %>% 
+ggplot(aes(fct_infreq(race) %>% fct_rev())) + 
+geom_bar() + coord_flip() + 
+labs(x = "Victim race") 
+```
